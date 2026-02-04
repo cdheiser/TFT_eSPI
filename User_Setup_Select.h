@@ -18,6 +18,14 @@
 #ifndef USER_SETUP_LOADED //  Lets PlatformIO users define settings in
                           //  platformio.ini, see notes in "Tools" folder.
 
+#if defined(M5STICK)
+  #if defined(PLUS)
+    #include <User_Setups/Setup_M5StickCPlus.h>
+  #else
+    #include <User_Setups/Setup_M5StickC.h>
+  #endif
+#endif
+
 ///////////////////////////////////////////////////////
 //   User configuration selection lines are below    //
 ///////////////////////////////////////////////////////

@@ -5,6 +5,15 @@
 #ifndef _TFT_eSPI_ESP32H_
 #define _TFT_eSPI_ESP32H_
 
+// Core 3.x compatibility
+#if defined(ARDUINO_ARCH_ESP32) && (ESP_ARDUINO_VERSION_MAJOR >= 3)
+  #include <soc/gpio_struct.h>
+  #include <soc/gpio_reg.h>
+  #if !defined(GPIO)
+    #define GPIO (*((volatile gpio_dev_t *)DR_REG_GPIO_BASE))
+  #endif
+#endif
+
 // Processor ID reported by getSetup()
 #define PROCESSOR_ID 0x32
 
@@ -136,7 +145,12 @@ SPI3_HOST = 2
   // Call up the SPIFFS (SPI FLASH Filing System) for the anti-aliased fonts
   #define FS_NO_GLOBALS
   #include <FS.h>
-  #include "SPIFFS.h" // ESP32 only
+  #if __has_include(<SPIFFS.h>)
+    #include <SPIFFS.h>
+  #elif __has_include(<LittleFS.h>)
+    #include <LittleFS.h>
+    #define SPIFFS LittleFS
+  #endif
   #define FONT_FS_AVAILABLE
 #endif
 
